@@ -1,0 +1,105 @@
+<body>
+    <div class="message-container">
+  <label for="destination">Send to:</label>
+  <select id="destination">
+    <option value="broadcast">📢 Broadcast (All Users)</option>
+    <optgroup label="Server Members" id="user-list">
+      
+    </optgroup>
+  </select>
+
+  <label for="message">Message:</label>
+  <textarea id="message" rows="4" placeholder="Type your message here..."></textarea>
+
+  <button onclick="sendMessage()">Send Message</button>
+</div>
+<iframe src="" frameborder="0"></iframe>
+<div class="lsit" id="box">
+
+</div>
+</body>
+<script>
+  function sendMessage() {
+    const target = document.getElementById("destination").value;
+    const text = document.getElementById("message").value.trim();
+
+    if (!text) {
+      alert("Please enter a message.");
+      return;
+    }
+
+    // Replace this payload with your actual API fetch call
+    const payload = { target, message: text };
+    console.log("Sending message payload:", payload);
+    
+    fetch('url', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' // Tells the server you are sending JSON data
+        },
+        body: JSON.stringify(payload) // Converts your JS object into a JSON string
+        })
+        .then(response => response.json()) // Converts server response back to a JS object
+        .then(data => console.log('Success:', data))
+        .catch(error => console.error('Error:', error));
+    window.location.reload(true);
+    }
+  const box = document.getElementById('box');
+  box.style.marginTop = '100px';
+  box.style.minHeight = '40vh';
+  
+  fetch('/msgref', {
+    method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(element => {
+           
+            const nl = document.createElement('div');
+            nl.id = 'line';
+            nl.style.margin = '0px'
+            nl.style.padding = '0px'
+            nl.innerHTML = `<p style="margin: 0; padding: 0;"> > ${element.message}</p>`;
+            box.appendChild(nl);
+        });
+    })
+    .catch(error => console.error('Error:', error));
+    
+
+  
+
+  
+
+
+</script>
+
+<style>
+  .message-container {
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: sans-serif;
+  }
+  textarea, select, button {
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border: none;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  .lsit {
+    box-sizing: border-box;
+    height: auto;
+    padding: 30px;
+    background-color: #ccc;
+  }
+</style>
